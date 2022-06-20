@@ -8,6 +8,9 @@ from gmail import *
 def index():
     return render_template('index.html')
 
+@app.route('/registroUsuario')
+def registro():
+    return render_template('registroUsuario.html')
 
 @app.route('/history')
 def binance_history():
