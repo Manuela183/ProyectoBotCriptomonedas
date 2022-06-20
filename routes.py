@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app
-import binance_client as bc
+#import binance_client as bc
 from gmail import *
 from connection import get_db_connection
 
