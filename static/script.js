@@ -1,3 +1,9 @@
+$(document).ready(function () {
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
+});
+
 function verify_password() {
     /*pw1 = document.formulario_registro.password1.value
     pw2 = document.formulario_registro.password2.value
