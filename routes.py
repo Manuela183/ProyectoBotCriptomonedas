@@ -49,6 +49,12 @@ def registro():
 def report_order(symbol):
     orders = bc.get_orders(symbol)
 
+    for order in orders:
+        if order['side'] == 'SELL':
+            order['side'] = 'Venta'
+        else:
+            order['side'] = 'Compra'
+
     return render_template('report_order.html', orders=orders)
 
 
