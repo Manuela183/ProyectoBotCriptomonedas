@@ -1,16 +1,14 @@
-from flask import render_template
+from flask import Flask, render_template, request, redirect, url_for
 from app import app
-import binance_client as bc
+#import binance_client as bc
+import os, psycopg2
 from gmail import *
+from connection import get_db_connection
 
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('index.html')
-
-@app.route('/registroUsuario')
-def registro():
-    return render_template('registroUsuario.html')
 
 @app.route('/history')
 def binance_history():
@@ -26,3 +24,24 @@ def binance_history():
     gmail_order = get_tradingview_label_content()
 
     return render_template('binance_history.html', orders=orders, balance=balance, trades=trades, deposits=deposits, info=info, account_info=account_info, futures=futures, gmail_order=gmail_order)
+
+
+
+@app.route('/registro_usuario', methods=('GET', 'POST'))
+def registro():
+    if request.method == 'POST':
+        nickname = request.form['nickname']
+        password1 = request.form['password1']
+        email = request.form['email']
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('INSERT INTO usuario (nickname, password1, email)' 'VALUES (%s,%s,%s)', (nickname, password1, email))
+        conn.commit()
+        cur.close()
+        conn.close()
+        #return redirect(url_for('registro'))   
+
+    return render_template('registro_usuario.html')
+
+
