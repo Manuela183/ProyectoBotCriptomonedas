@@ -31,11 +31,12 @@ def get_account_info():
 def get_futures_info():
     return client.futures_account()
 
-def make_trade():
-    client.futures_change_leverage(symbol='BTCUSDT', leverage=config.LEVERAGE)
-    client.futures_create_order(
-        symbol='BTCUSDT',
-        type='MARKET',
-        side='BUY',
-        quantity=0.001
-    )
+# def make_trade():
+#     client.futures_change_leverage(symbol='BTCUSDT', leverage=config.LEVERAGE)
+
+#     client.futures_create_order(
+#         symbol='BTCUSDT',
+#         type='MARKET',
+#         side='BUY',
+#         quantity=0.001
+#     )
