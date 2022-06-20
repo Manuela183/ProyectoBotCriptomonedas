@@ -4,3 +4,5 @@ python-binance
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
+psycopg2
+python-dotenv #pip3 install python-dotenv
