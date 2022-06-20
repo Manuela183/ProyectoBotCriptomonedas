@@ -1,8 +1,6 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from app import app
 import binance_client as bc
-import os
-import psycopg2
 from gmail import *
 from connection import get_db_connection
 
@@ -61,21 +59,29 @@ def report_coin_info(symbol):
     return render_template('report_coin_info.html', coin_info=coin_info)
 
 
-@app.route('/trade_long', methods=('GET', 'POST'))
-def trade_long():
+@app.route('/trade', methods=('GET', 'POST'))
+def trade():
 
     if request.method == 'POST':
+        side = request.form['side']
         symbol = request.form['symbol']
         entry_price = request.form['entry_price']
         ammount = request.form['ammount']
-        tp = request.form['tp']
-        sl = request.form['sl']
+        tp = int(request.form['tp']) / 100
+        sl = int(request.form['sl']) / 100
 
-        bc.make_trade(symbol, entry_price, tp, sl)
+        print(tp, sl)
 
-        return render_template('trade_long.html')
+        trade_successful = bc.make_trade(side, symbol, entry_price, tp, sl)
 
-    return render_template('trade_long.html')
+        if trade_successful:
+            flash("La orden ha sido registrada con exito")
+        else:
+            flash("Ha ocurrido un error en la orden")
+
+        return render_template('trade.html')
+
+    return render_template('trade.html')
 
 
 @app.route('/tests')
