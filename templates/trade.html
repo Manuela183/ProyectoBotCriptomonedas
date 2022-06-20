@@ -3,7 +3,7 @@
 {% block main %}
 
 {% for message in get_flashed_messages() %}
-    {{message}}
+{{message}}
 {% endfor %}
 
 <!-- TradingView Widget BEGIN -->
@@ -40,37 +40,49 @@
     </script>
 </div>
 
-<div>
-    <form action="{{ url_for('trade') }}" method="post">
+<form action="{{ url_for('trade') }}" method="post">
 
-        <label for="inputState" class="col-sm- col-form-label">Tipo</label>
-        <select id="inputState" class="form-control" name="side">
-            <option value="BUY" selected>Comprar</option>
-            <option value="SELL">Vender</option>
-        </select>
+    <div class="container-lg">
 
-        <label for="inputState" class="col-sm- col-form-label">Moneda</label>
-        <select id="inputState" class="form-control" name="symbol">
-            <option value="BTCUSDT" selected>BTC</option>
-            <option value="ETHUSDT">ETH</option>
-        </select>
+        <div class="mb-3">
+            <label for="inputState" class="form-label">Tipo</label>
+            <select id="inputState" class="custom-select custom-select-lg mb-3" name="side">
+                <option value="BUY" selected>Comprar</option>
+                <option value="SELL">Vender</option>
+            </select>
+        </div>
 
-        <label for="entry_price">Precio de entrada:</label><br>
-        <input type="number" id="entry_price" name="entry_price"><br>
+        <div class="mb-3">
+            <label for="inputState" class="form-label">Moneda</label>
+            <select id="inputState" class="custom-select custom-select-lg mb-3" name="symbol">
+                <option value="BTCUSDT" selected>BTC</option>
+                <option value="ETHUSDT">ETH</option>
+            </select>
+        </div>
 
-        <label for="ammount">Valor (USD):</label><br>
-        <input type="number" id="ammount" name="ammount"><br>
+        <div class="mb-3">
+            <label for="entry_price" class="form-label">Precio de entrada:</label><br>
+            <input type="number" class="form-control" id="entry_price" name="entry_price"><br>
+        </div>
 
-        <label for="tp">Tomar ganancias (Entre 2 y 5 %):</label><br>
-        <input type="range" id="tp" name="tp" min="2" max="5"><br>
+        <div class="mb-3">
+            <label for="ammount" class="form-label">Valor (USD):</label><br>
+            <input type="number" class="form-control" id="ammount" name="ammount"><br>
+        </div>
 
-        <label for="sl">Detener pérdidas (Entre 2 y 5 %):</label><br>
-        <input type="range" id="sl" name="sl" min="2" max="5"><br>
-        
-        <input type="submit" value="Enviar Orden">
+        <div class="mb-3">
+            <label for="tp" class="form-label">Tomar ganancias (Entre 2 y 5 %):</label><br>
+            <input type="range" class="form-range" id="tp" name="tp" min="2" max="5"><br>
+        </div>
 
-    </form>
-</div>
+        <div class="mb-3">
+            <label for="sl" class="form-label">Detener pérdidas (Entre 2 y 5 %):</label><br>
+            <input type="range" class="form-range" id="sl" name="sl" min="2" max="5"><br>
+        </div>
+
+        <button type="submit" class="btn btn-primary" value="Enviar Orden">Submit</button>
+    </div>
+</form>
 <!-- TradingView Widget END -->
 
 {% endblock %}
