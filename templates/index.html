@@ -1,44 +1,5 @@
 {% extends "base.html" %}
 
 {% block main %}
-<!-- TradingView Widget BEGIN -->
-<div class="tradingview-widget-container">
-    <div id="tradingview_63eed"></div>
-    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE"
-            rel="noopener" target="_blank"><span class="blue-text">BTCUSDT Chart</span></a> by TradingView</div>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script type="text/javascript">
-        new TradingView.widget(
-            {
-                "width": 1500,
-                "height": 530,
-                "symbol": "BINANCE:BTCUSDT",
-                "interval": "240",
-                "timezone": "America/Bogota",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "withdateranges": true,
-                "hide_side_toolbar": false,
-                "allow_symbol_change": true,
-                "watchlist": [
-                    "BINANCE:ETHUSDT"
-                ],
-                "details": true,
-                "hotlist": true,
-                "calendar": true,
-                "studies": [
-                    "BollingerBandsR@tv-basicstudies"
-                ],
-                "show_popup_button": true,
-                "popup_width": "1000",
-                "popup_height": "650",
-                "container_id": "tradingview_63eed"
-            }
-        );
-    </script>
-</div>
-<!-- TradingView Widget END -->
+
 {% endblock %}
