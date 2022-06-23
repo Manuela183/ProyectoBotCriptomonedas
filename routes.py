@@ -1,7 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, Response, session
 from app import app, bcrypt
 import binance_client as bc
-from gmail import *
 from connection import get_db_connection
 from fpdf import FPDF
 import psycopg2.extras
