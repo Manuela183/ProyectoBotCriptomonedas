@@ -299,7 +299,3 @@ def trade():
 
     return render_template('trade.html')
 
-
-@app.route('/tests')
-def test():
-    return render_template('tests.html', trades=bc.get_trades(), orders=bc.get_orders('BTCUSDT'), open_orders=bc.get_open_orders())
