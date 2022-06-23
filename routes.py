@@ -1,6 +1,6 @@
-from flask import render_template, request, redirect, url_for, flash, Response
+from flask import render_template, request, redirect, url_for, flash, Response, session
 from app import app, bcrypt
-#import binance_client as bc
+import binance_client as bc
 from gmail import *
 from connection import get_db_connection
 from fpdf import FPDF
@@ -31,6 +31,7 @@ def report():
 
     return render_template('report.html')
 
+
 @app.route('/registro_usuario', methods=('GET', 'POST'))
 def registro():
     if request.method == 'POST':
@@ -41,12 +42,12 @@ def registro():
         api_secret = request.form['api_secret']
         role = "usuario"
 
-        hash = bcrypt.generate_password_hash(password)
+        hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute('INSERT INTO usuario (nickname, password1, email, role, api, api_secret)' 'VALUES (%s,%s,%s,%s,%s,%s)',
-                    (nickname, hash, email, role, api, api_secret))
+                        (nickname, hash, email, role, api, api_secret)) 
         conn.commit()
         cur.close()
         conn.close()
@@ -54,9 +55,52 @@ def registro():
 
     return render_template('registro_usuario.html')
 
+
+@app.route('/inicio_sesion', methods=('GET', 'POST'))
+def iniciar_sesion():
+
+    if request.method == 'POST':
+        nickname = request.form['nickname']
+        password1 = request.form['password1']
+
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute('''SELECT password1, id, role FROM usuario
+                        WHERE nickname=%s''', (nickname,))
+
+            usuario = cur.fetchall()
+
+            if usuario:
+                print(usuario)
+                hash = bcrypt.check_password_hash(usuario[0][0], password1)
+                
+                if hash:
+                    session['id'] = usuario[0][1]
+                    session['role'] = usuario[0][2]
+
+        except (Exception, psycopg2.Error) as error:
+            print("Error al obtener datos de la base de datos", error)
+        
+        finally:
+            cur.close()
+            conn.close()
+
+    
+        if 'id' in session and request.method:
+            flash("Ha iniciado sesión con exito")
+            return redirect(url_for('index'))
+        else:
+            flash("Ha ocurrido un error en el inicio de sesión, verifique nickname y contraseña")
+
+
+    return render_template('inicio_sesion.html')
+
+
 @app.route('/editar_usuario')
 def editar():
     pass
+
 
 @app.route('/report/order/<symbol>')
 def report_order(symbol):
@@ -72,7 +116,6 @@ def report_order(symbol):
 def download_users():
     try:
         conn = get_db_connection()
-        print("1")
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM usuario")
         usuarios = cur.fetchall()
