@@ -2,45 +2,51 @@
 
 {% block main %}
 
+<!-- Visualizar reportes -->
 <form action="{{ url_for('report') }}" method="post">
-    <div class="form-group row">
-      <label for="inputState" class="col-sm- col-form-label">Seleccione reporte a generar</label>
-      <div class="col-sm-10">
-        <select id="inputState" class="form-control" name="report_type">
-            <option value="Order" selected>Historial de Ordenes</option>
-            <option value="Info">Información sobre moneda</option>
-        </select>
-      </div>
+  <div class="form-group row">
+    <label for="inputState" class="col-sm- col-form-label">Seleccione reporte a generar</label>
+    <div class="col-sm-10">
+      <select id="inputState" class="form-control" name="report_type">
+        <option value="Order" selected>Historial de Ordenes</option>
+        <option value="Info">Información sobre moneda</option>
+      </select>
     </div>
-    <div class="form-group row">
-      <label for="inputState" class="col-sm- col-form-label">Seleccione sobre que moneda desea el reporte</label>
-      <div class="col-sm-10">
-        <select id="inputState" class="form-control" name="symbol">
-            <option value="BTCUSDT" selected>BTC</option>
-            <option value="ETHUSDT">ETH</option>
-        </select>
-      </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputState" class="col-sm- col-form-label">Seleccione sobre que moneda desea el reporte</label>
+    <div class="col-sm-10">
+      <select id="inputState" class="form-control" name="symbol">
+        <option value="BTCUSDT" selected>BTC</option>
+        <option value="ETHUSDT">ETH</option>
+      </select>
     </div>
-    <div class="form-group row">
-      <div class="col-sm-10">
-        <br>
-        <button type="submit" class="btn btn-primary">Consultar</button>
-      </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <br>
+      <button type="submit" class="btn btn-primary" id="consultar" name="consultar">Consultar</button>
     </div>
-  </form>
+  </div>
+</form>
 
-<!-- <div>
-    <form>
-        <div class="form-group col-md-4">
-            <label for="inputState">State</label>
-            <select id="inputState" class="form-control">
-                <option selected>Choose...</option>
-                <option>te</option>
-                <option>amo</option>
-                <option>muchote</option>
-            </select>
-        </div>
-    </form>
-</div> -->
 
+<!-- Generar reportes -->
+<form action="{{ url_for('report') }}" method="post">
+  <div class="form-group row">
+    <label for="inputState" class="col-sm- col-form-label">Seleccione reporte a generar</label>
+    <div class="col-sm-10">
+      <select id="inputState" class="form-control" name="report_type">
+        <option value="users" selected>Usuarios</option>
+        <option value="trades">Ordenes creadas (todos los usuarios)</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <br>
+      <button type="submit" class="btn btn-primary" id="generar" name="generar">Generar</button>
+    </div>
+  </div>
+</form>
 {% endblock %}
