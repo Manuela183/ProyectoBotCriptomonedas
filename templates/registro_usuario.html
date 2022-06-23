@@ -1,27 +1,32 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h3 id="Title">Registro de usuario</h3>
+
+<!-- Poner bonito -->
+{% for message in get_flashed_messages() %}
+    {{message}}
+{% endfor %}
+<h1 class="h3 mb-3 fw-normal">Registro de usuario</h1>
 <form method="post">
     <div class="container-lg">
         <div class="mb-3">
             <label for="nickname" class="form-label">Nickname</label>
-            <input type="text" name="nickname" class="form-control" id="nickname" aria-describedby="emailHelp" placeholder="Example: Manuela183">
+            <input type="text" name="nickname" class="form-control" id="nickname" aria-describedby="emailHelp" placeholder="Example: Manuela183" required>
         </div>
         <div class="mb-3">
             <label for="password1" class="form-label">Password</label>
-            <input type="password" name="password1" class="form-control" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*/-]).{8,}$" id="password1">
+            <input type="password" name="password1" class="form-control" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*/-]).{8,}$" id="password1" required>
         </div>
         <p>Recomendación: La contraseña debe contener caracteres en mínuscula, mayúscula, números y caracteres especiales.</p>
         <div class="mb-3">
             <label for="password2" class="form-label">Confirm Password</label>
-            <input type="password" name="password2" class="form-control" id="password2" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*/-]).{8,}$" onchange="verify_password()">
+            <input type="password" name="password2" class="form-control" id="password2" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*/-]).{8,}$" onchange="verify_password()" required>
         </div>
         <p>Ejemplo Email</p>
         <image src="{{url_for('static',filename = 'images/ejemplo_email.jpg')}}" ></image>
         <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
-            <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" required>
         </div>
         <div class="mb-3">
             <label for="api" class="form-label">API - Binance</label>
