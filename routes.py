@@ -23,7 +23,7 @@ def report():
 
         report_type = request.form["report_type"]
         symbol = request.form["symbol"]
-       
+
         if report_type == 'Order':
             return redirect(url_for('report_order', symbol=symbol))
 
@@ -42,16 +42,38 @@ def registro():
         api_secret = request.form['api_secret']
         role = "usuario"
 
+        bandera = False
+
         hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('INSERT INTO usuario (nickname, password1, email, role, api, api_secret)' 'VALUES (%s,%s,%s,%s,%s,%s)',
-                        (nickname, hash, email, role, api, api_secret)) 
-        conn.commit()
-        cur.close()
-        conn.close()
-        #return redirect(url_for('registro'))
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+
+            cur.execute("SELECT id WHERE nickname=%s", (nickname))
+
+            exists = cur.fetchall()
+
+            if not exists:
+                cur.execute('INSERT INTO usuario (nickname, password1, email, role, api, api_secret)' 'VALUES (%s,%s,%s,%s,%s,%s)',
+                            (nickname, hash, email, role, api, api_secret))
+
+                bandera = True
+
+        except (Exception, psycopg2.Error) as error:
+            print("Error al guardar usuario en la base de datos", error)
+
+        finally:
+            conn.commit()
+            cur.close()
+            conn.close()
+
+        if bandera:
+            flash('Se ha registrado con exito')
+            return redirect(url_for('iniciar_sesion'))
+        else:
+            flash('Nickname ingresado ya existe')
+            return redirect(url_for('registro'))
 
     return render_template('registro_usuario.html')
 
@@ -74,25 +96,24 @@ def iniciar_sesion():
             if usuario:
                 print(usuario)
                 hash = bcrypt.check_password_hash(usuario[0][0], password1)
-                
+
                 if hash:
                     session['id'] = usuario[0][1]
                     session['role'] = usuario[0][2]
 
         except (Exception, psycopg2.Error) as error:
             print("Error al obtener datos de la base de datos", error)
-        
+
         finally:
             cur.close()
             conn.close()
 
-    
         if 'id' in session and request.method:
             flash("Ha iniciado sesión con exito")
             return redirect(url_for('index'))
         else:
-            flash("Ha ocurrido un error en el inicio de sesión, verifique nickname y contraseña")
-
+            flash(
+                "Ha ocurrido un error en el inicio de sesión, verifique nickname y contraseña")
 
     return render_template('inicio_sesion.html')
 
@@ -143,7 +164,7 @@ def download_users():
         pdf.set_font('Times', '', 10)
         pdf.cell(page_width, 0.0, '- end of report -', align='C')
 
-        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=reporte_usuarios.pdf'})
+        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition': 'attachment;filename=reporte_usuarios.pdf'})
 
     except Exception as e:
         print(e)
