@@ -19,15 +19,24 @@ def report():
     if request.method == 'POST':
 
         if 'generar' in request.form:
-            return redirect(url_for('download_users'))
+
+            if 'role' in session and session['role'] == 'administrador':
+                return redirect(url_for('download_users'))
+            else:
+                flash("Debe ser administrador para poder generar este reporte")
+                return render_template('report.html')
 
         report_type = request.form["report_type"]
         symbol = request.form["symbol"]
 
-        if report_type == 'Order':
-            return redirect(url_for('report_order', symbol=symbol))
+        if 'id' in session:
+            if report_type == 'Order':
+                return redirect(url_for('report_order', symbol=symbol))
 
-        return redirect(url_for('report_coin_info', symbol=symbol))
+            return redirect(url_for('report_coin_info', symbol=symbol))
+        else:
+            flash('Debe iniciar sesión para poder generar reportes')
+            return render_template('report.html')
 
     return render_template('report.html')
 
@@ -94,7 +103,6 @@ def iniciar_sesion():
             usuario = cur.fetchall()
 
             if usuario:
-                print(usuario)
                 hash = bcrypt.check_password_hash(usuario[0][0], password1)
 
                 if hash:
@@ -108,7 +116,7 @@ def iniciar_sesion():
             cur.close()
             conn.close()
 
-        if 'id' in session and request.method:
+        if 'id' in session:
             flash("Ha iniciado sesión con exito")
             return redirect(url_for('index'))
         else:
@@ -118,6 +126,16 @@ def iniciar_sesion():
     return render_template('inicio_sesion.html')
 
 
+@app.route('/cerrar_sesion')
+def cerrar_sesion():
+    session.pop('id', None)
+    session.pop('role', None)
+    
+    flash('Se ha cerrado sesión con exito')
+
+    return redirect(url_for('index'))
+
+
 @app.route('/editar_usuario')
 def editar():
     pass
@@ -125,12 +143,36 @@ def editar():
 
 @app.route('/report/order/<symbol>')
 def report_order(symbol):
-    orders = bc.get_orders(symbol)
 
-    for order in orders:
-        order['side'] = 'Venta' if order['side'] == 'SELL' else 'Compra'
+    try:
+        bandera = True
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT api, api_secret FROM usuario
+                    WHERE id=%s''', (session['id'],))
 
-    return render_template('report_order.html', orders=orders)
+        data = cur.fetchall()
+        api = (data[0][0], data[0][1])
+
+        client = bc.init_client(api[0], api[1])
+
+        orders = bc.get_orders(symbol, client)
+
+        for order in orders:
+            order['side'] = 'Venta' if order['side'] == 'SELL' else 'Compra'
+    
+    except:
+        flash("Error en credenciales de la api")
+        bandera = False
+    
+    finally:
+        cur.close()
+        conn.close()
+    
+    if bandera:
+        return render_template('report_order.html', orders=orders)
+
+    return render_template('report.html')
 
 
 @app.route('/report/order/download')
@@ -167,7 +209,7 @@ def download_users():
         return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition': 'attachment;filename=reporte_usuarios.pdf'})
 
     except Exception as e:
-        print(e)
+        print("Error en la creacion del pdf",e)
 
     finally:
         cur.close()
@@ -176,41 +218,82 @@ def download_users():
 
 @app.route('/report/coin_info/<symbol>')
 def report_coin_info(symbol):
-    coin_info = bc.get_symbol_info(symbol)
+    try:
+        bandera = True
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT api, api_secret FROM usuario
+                    WHERE id=%s''', (session['id'],))
 
-    return render_template('report_coin_info.html', coin_info=coin_info)
+        data = cur.fetchall()
+        api = (data[0][0], data[0][1])
 
+        client = bc.init_client(api[0], api[1])
+
+        coin_info = bc.get_symbol_info(symbol, client)
+    
+    except:
+        flash("Error en credenciales de la api")
+        bandera = False
+    
+    finally:
+        cur.close()
+        conn.close()
+    
+    if bandera:
+        return render_template('report_coin_info.html', coin_info=coin_info)
+
+    return render_template('report.html')
+    
 
 @app.route('/trade', methods=('GET', 'POST'))
 def trade():
 
-    if request.method == 'GET':
-        print("dasdas")
-        return render_template('trade.html')
-
     if request.method == 'POST':
-        side = request.form['side']
-        symbol = request.form['symbol']
-        entry_price = request.form['entry_price']
-        ammount = request.form['ammount']
-        tp = int(request.form['tp']) / 100
-        sl = int(request.form['sl']) / 100
 
-        trade_successful = bc.make_trade(side, symbol, entry_price, tp, sl)
+        if 'id' in session:
 
-        if trade_successful:
-            flash("La orden ha sido registrada con exito")
-            type = 'Venta' if side == 'SELL' else 'Compra'
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute('INSERT INTO trades (tipo, moneda, precio_entrada, tomar_ganancias, detener_perdidas)' 'VALUES (%s,%s,%s,%s,%s)',
-                        (type, symbol, entry_price, tp, sl))
-            conn.commit()
-            cur.close()
-            conn.close()
+            side = request.form['side']
+            symbol = request.form['symbol']
+            entry_price = request.form['entry_price']
+            ammount = request.form['ammount']
+            tp = int(request.form['tp']) / 100
+            sl = int(request.form['sl']) / 100
+            
+            try:
+                bandera = True
+                conn = get_db_connection()
+                cur = conn.cursor()
+                cur.execute('''SELECT api, api_secret FROM usuario
+                            WHERE id=%s''', (session['id'],))
 
+                data = cur.fetchall()
+                api = (data[0][0], data[0][1])
+
+                client = bc.init_client(api[0], api[1])
+                trade_successful = bc.make_trade(side, symbol, entry_price, tp, sl, client)
+
+                if trade_successful:
+                    flash("La orden ha sido registrada con exito")
+
+                    type = 'Venta' if side == 'SELL' else 'Compra'
+                    cur.execute('INSERT INTO trades (tipo, moneda, precio_entrada, tomar_ganancias, detener_perdidas)' 'VALUES (%s,%s,%s,%s,%s)',
+                                (type, symbol, entry_price, tp, sl))
+                    
+                    conn.commit()
+
+                else:
+                    flash("Ha ocurrido un error en la orden")
+
+            except:
+                flash("Error en credenciales de la api")
+
+            finally:
+                cur.close()
+                conn.close()
+        
         else:
-            flash("Ha ocurrido un error en la orden")
+            flash('Debe iniciar sesión para poder crear ordenes')
 
         return render_template('trade.html')
 
