@@ -6,3 +6,5 @@ google-auth-httplib2
 google-auth-oauthlib
 psycopg2
 python-dotenv #pip3 install python-dotenv
+fpdf
+flask-bcrypt
