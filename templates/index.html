@@ -2,41 +2,12 @@
 
 {% block main %}
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
-
-    <!-- Bootstrap core CSS -->
-    <link href="/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
-  </head>
-  <body class="text-center">
-    
-<main class="form-signin">
-  <form>
-    <img class="mb-4" src="/static/images/unal.png" alt="" width="150" height="75">
-    <h1 class="h3 mb-3 fw-normal">Inicio de Sesión</h1>
-
-    <div class="form-floating">
-      <input type="text" class="form-control" id="floatingInput">
-      <label for="floatingInput">Nombre de Usuario</label>
-    </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-      <label for="floatingPassword">Contraseña</label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
-  </form>
-</main>
-
-
-    
-  </body>
-</html>
+<!-- Poner bonito -->
+{% for message in get_flashed_messages() %}
+  {{message}}
+{% endfor %}
+<div>
+  <h1>Aqui debe ir informacion de que hace la aplicacion y un boton que redireccione al inicio de sesion</h1>
+</div>
 {% endblock %}
