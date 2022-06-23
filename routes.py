@@ -260,7 +260,6 @@ def trade():
             sl = int(request.form['sl']) / 100
             
             try:
-                bandera = True
                 conn = get_db_connection()
                 cur = conn.cursor()
                 cur.execute('''SELECT api, api_secret FROM usuario
