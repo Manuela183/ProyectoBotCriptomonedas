@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<!-- Poner bonito -->
+{% for message in get_flashed_messages() %}
+{{message}}
+{% endfor %}
+
+<h1 class="h3 mb-3 fw-normal">Inicio de Sesión</h1>
+<form action="{{ url_for('iniciar_sesion') }}" method="post">
+  <!-- <img class="mb-4" src="/static/images/unal.png" alt="" width="150" height="75"> -->
+  <div class="container-lg">
+    <div class="mb-3">
+      <label for="nickname" class="form-label">Nickname</label>
+      <input type="text" name="nickname" class="form-control" id="nickname" aria-describedby="emailHelp" required>
+    </div>
+    <div class="mb-3">
+      <label for="password1" class="form-label">Password</label>
+      <input type="password" name="password1" class="form-control" id="password1" required>
+    </div>
+    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+  </div>
+</form>
+
+{% endblock %}
