@@ -5,7 +5,7 @@
 <form method="post">
     <div class="container-lg">
         <div class="mb-3">
-            <label for="nickaname" class="form-label">Nickname</label>
+            <label for="nickname" class="form-label">Nickname</label>
             <input type="text" name="nickname" class="form-control" id="nickname" aria-describedby="emailHelp" placeholder="Example: Manuela183">
         </div>
         <div class="mb-3">
@@ -22,6 +22,14 @@
         <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
             <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="api" class="form-label">API - Binance</label>
+            <input type="text" name="api" class="form-control" id="api">
+        </div>
+        <div class="mb-3">
+            <label for="api_secret" class="form-label">Secret API - Binance</label>
+            <input type="text" name="api_secret" class="form-control" id="api_secret" >
         </div>
         <button type="submit" class="btn btn-primary" id="submit" disabled>Submit</button>
     </div>
