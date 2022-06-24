@@ -119,8 +119,7 @@ def iniciar_sesion():
             flash("Ha iniciado sesión con exito")
             return redirect(url_for('index'))
         else:
-            flash(
-                "Ha ocurrido un error en el inicio de sesión, verifique nickname y contraseña")
+            flash("Ha ocurrido un error en el inicio de sesión, verifique nickname y contraseña")
 
     return render_template('inicio_sesion.html')
 
