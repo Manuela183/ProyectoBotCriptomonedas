@@ -43,11 +43,11 @@ def report():
 @app.route('/registro_usuario', methods=('GET', 'POST'))
 def registro():
     if request.method == 'POST':
-        nickname = request.form['nickname']
-        password = request.form['password1']
-        email = request.form['email']
-        api = request.form['api']
-        api_secret = request.form['api_secret']
+        nickname = str(request.form['nickname'])
+        password = str(request.form['password1'])
+        email = str(request.form['email'])
+        api = str(request.form['api'])
+        api_secret = str(request.form['api_secret'])
         role = "usuario"
 
         bandera = False
@@ -57,8 +57,7 @@ def registro():
         try:
             conn = get_db_connection()
             cur = conn.cursor()
-
-            cur.execute("SELECT id WHERE nickname=%s", (nickname))
+            cur.execute("SELECT id FROM usuario WHERE nickname='{}'".format(nickname))
 
             exists = cur.fetchall()
 
