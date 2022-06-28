@@ -3,7 +3,21 @@
 {% block main %}
 
 {% for message in get_flashed_messages() %}
-{{message}}
+{% if 'La orden ha sido registrada con exito' in message %}
+<div class="alert alert-success">
+    {{message}}
+</div>
+{% endif %}
+{% if 'Ha ocurrido un error en la orden' in message %}
+<div class="alert alert-danger">
+    {{message}}
+</div>
+{% endif %}
+{% if 'Error en credenciales de la api' in message %}
+<div class="alert alert-danger">
+    {{message}}
+</div>
+{% endif %}
 {% endfor %}
 
 <!-- TradingView Widget BEGIN -->

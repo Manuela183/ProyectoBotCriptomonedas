@@ -4,9 +4,18 @@
 
 <!-- Poner bonito -->
 {% for message in get_flashed_messages() %}
-    {{message}}
+    {% if message in 'Se ha registrado con exito'%}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+    {% if message in 'Nickname ingresado ya existe' %}
+        <div class="alert alert-danger">
+            {{message}}
+        </div>
+    {% endif %}    
 {% endfor %}
-<h1 class="h3 mb-3 fw-normal">Registro de usuario</h1>
+<h1 class="h3 mb-3 fw-normal">Registro de usuario</h1> 
 <form method="post">
     <div class="container-lg">
         <div class="mb-3">
@@ -39,5 +48,8 @@
         <button type="submit" class="btn btn-primary" id="submit" disabled>Submit</button>
     </div>
 </form>
+<br>
+<p style="padding:5px;">Si ya tiene cuenta, inicie sesión
+    <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark ">Iniciar Sesión</a></p>
 
 {% endblock %}

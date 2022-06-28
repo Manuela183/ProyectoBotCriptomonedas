@@ -2,12 +2,33 @@
 
 {% block main %}
 
+<body>
+  
+  <!-- Poner bonito -->
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success">
+    {{message}}
+  </div>
+  {% endfor %}
+  <div>
+    <h1>¡Bienvenido!</h1>
+    <h3>En nuestra aplicación encontrarás la forma de realizar trading con distintas Cryptomonedas, además de esto se
+      podrá observar los diferentes movimientos en tiempo realizar
+      de estas Cryptos.
+    </h3>
+  </div>
 
-<!-- Poner bonito -->
-{% for message in get_flashed_messages() %}
-  {{message}}
-{% endfor %}
-<div>
-  <h1>Aqui debe ir informacion de que hace la aplicacion y un boton que redireccione al inicio de sesion</h1>
-</div>
+  <br>
+  <div class="container text-center">
+    <h6>Si ya tiene cuenta, puede iniciar sesión</h6>
+    <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark ">Iniciar Sesión</a>
+    <br>
+    <h6>Si no tienes cuenta, puede registrarse aquí</h6>
+    <a href="{{ url_for('registro') }}" class="btn btn-dark ">Registrarse</a>
+  </div>
+</body>
+
+
+
+
 {% endblock %}

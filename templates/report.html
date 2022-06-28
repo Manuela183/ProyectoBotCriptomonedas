@@ -4,7 +4,21 @@
 
 <!-- Poner bonito -->
 {% for message in get_flashed_messages() %}
-  {{message}}
+{% if 'Error en credenciales de la api' in message %}
+<div class="alert alert-danger">
+    {{message}}
+</div>
+{% endif %}
+{% if 'Debe iniciar sesión para poder generar reportes' in message %}
+<div class="alert alert-danger">
+    {{message}}
+</div>
+{% endif %}
+{% if 'Debe ser administrador para poder generar este reporte' in message %}
+<div class="alert alert-danger">
+    {{message}}
+</div>
+{% endif %}
 {% endfor %}
 
 <!-- Visualizar reportes -->

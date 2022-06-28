@@ -2,9 +2,17 @@
 
 {% block main %}
 
-<!-- Poner bonito -->
 {% for message in get_flashed_messages() %}
-{{message}}
+    {% if 'Ha iniciado sesión con exito' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+    {% if 'Ha ocurrido un error en el inicio de sesión, verifique nickname y contraseña' in message %}
+        <div class="alert alert-danger">
+            {{message}}
+        </div>
+    {% endif %}    
 {% endfor %}
 
 <h1 class="h3 mb-3 fw-normal">Inicio de Sesión</h1>
@@ -22,5 +30,8 @@
     <button type="submit" class="btn btn-primary" id="submit">Submit</button>
   </div>
 </form>
+<br>
+<p style="padding:5px;">¿Desea registrarse?
+  <a href="{{ url_for('registro') }}" class="btn btn-dark ">Registrar</a></p>
 
 {% endblock %}

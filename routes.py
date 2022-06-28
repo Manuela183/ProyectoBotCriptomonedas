@@ -43,11 +43,11 @@ def report():
 @app.route('/registro_usuario', methods=('GET', 'POST'))
 def registro():
     if request.method == 'POST':
-        nickname = request.form['nickname']
-        password = request.form['password1']
-        email = request.form['email']
-        api = request.form['api']
-        api_secret = request.form['api_secret']
+        nickname = str(request.form['nickname'])
+        password = str(request.form['password1'])
+        email = str(request.form['email'])
+        api = str(request.form['api'])
+        api_secret = str(request.form['api_secret'])
         role = "usuario"
 
         bandera = False
@@ -57,8 +57,7 @@ def registro():
         try:
             conn = get_db_connection()
             cur = conn.cursor()
-
-            cur.execute("SELECT id WHERE nickname=%s", (nickname))
+            cur.execute("SELECT id FROM usuario WHERE nickname='{}'".format(nickname))
 
             exists = cur.fetchall()
 
@@ -134,9 +133,36 @@ def cerrar_sesion():
     return redirect(url_for('index'))
 
 
-@app.route('/editar_usuario')
-def editar():
-    pass
+@app.route('/editar_user/id', methods=["POST"])
+def editar(id):
+
+    if request.method == 'POST':
+        nickname = request.form['nickname']
+        email = request.form['email']
+        api = request.form['api']
+        api_secret = request.form['api_secret']
+        
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute('''
+                UPDATE usuario
+                SET Nickname = %s,
+                    email = %s,
+                    api = %s,
+                    api_secret = %s
+                WHERE id = %s
+            ''', (nickname, email, api, api_secret, id))
+        except (Exception, psycopg2.Error) as error:
+            print("Error al obtener datos de la base de datos", error)
+
+        finally:
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        flash('Updated Successfully')
+        return redirect(url_for('index'))
 
 
 @app.route('/report/order/<symbol>')
@@ -181,30 +207,76 @@ def download_users():
         cur.execute("SELECT * FROM usuario")
         usuarios = cur.fetchall()
 
-        pdf = FPDF()
+        pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
-        page_width = pdf.w - 2 * pdf.l_margin
+        pdf.set_font('Arial', 'B', 16)
 
-        pdf.set_font('Times', 'B', 14.0)
-        pdf.cell(page_width, 0.0, 'Employee Data', align='C')
-        pdf.ln(10)
+        pdf.multi_cell(w = 0, h= 7, txt='REPORTE DE USUARIOS', border=1, align='C', fill=0)
+        pdf.ln(0.25)
+        pdf.cell(w = 20, h= 8, txt='ID', border=1, align='C', fill=0)
 
-        pdf.set_font('Courier', '', 12)
-        col_width = page_width/4
+        pdf.cell(w = 50, h= 8, txt='Nombre', border=1, align='C', fill=0)
 
-        pdf.ln(1)
-        th = pdf.font_size
+        pdf.multi_cell(w = 0, h= 8, txt='Correo', border=1, align='C', fill=0)
 
         for usuario in usuarios:
-            pdf.cell(col_width, th, str(usuario['id']), border=1)
-            pdf.cell(col_width, th, str(usuario['nickname']), border=1)
+            pdf.cell(20, 8, str(usuario['id']), border=1)
+            pdf.cell(50, 8, str(usuario['nickname']), border=1)
+            pdf.multi_cell(0, 8, str(usuario['email']), border=1)
 
         pdf.ln(10)
 
         pdf.set_font('Times', '', 10)
-        pdf.cell(page_width, 0.0, '- end of report -', align='C')
+       
+        pdf.cell(0, 0.0, '- end of report -', align='C')
 
         return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition': 'attachment;filename=reporte_usuarios.pdf'})
+
+    except Exception as e:
+        print("Error en la creacion del pdf",e)
+
+    finally:
+        cur.close()
+        conn.close()
+
+app.route('/report/order/download')
+def download_orders():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("SELECT * FROM trades")
+        ordenes = cur.fetchall()
+
+        pdf = FPDF(orientation='P', unit='mm', format='A4')
+        pdf.add_page()
+        pdf.set_font('Arial', 'B', 16)
+
+        pdf.multi_cell(w = 0, h= 7, txt='REPORTE DE ORDENES', border=1, align='C', fill=0)
+        pdf.ln(0.25)
+        pdf.cell(w = 20, h= 8, txt='ID', border=1, align='C', fill=0)
+
+        pdf.cell(w = 50, h= 8, txt='Toma de ganancias', border=1, align='C', fill=0)
+        pdf.cell(w = 50, h= 8, txt='Precio de entrada', border=1, align='C', fill=0)
+        pdf.cell(w = 50, h= 8, txt='Moneda', border=1, align='C', fill=0)
+        pdf.cell(w = 50, h= 8, txt='Detener las perdidas', border=1, align='C', fill=0)
+
+        pdf.multi_cell(w = 0, h= 8, txt='Tipo', border=1, align='C', fill=0)
+
+        for ordenes in ordenes:
+            pdf.cell(20, 8, str(ordenes['id']), border=1)
+            pdf.cell(50, 8, str(ordenes['tomar_ganancias']), border=1)
+            pdf.cell(50, 8, str(ordenes['precio_entrada']), border=1)
+            pdf.cell(50, 8, str(ordenes['moneda']), border=1)
+            pdf.cell(50, 8, str(ordenes['detener_perdidas']), border=1)
+            pdf.multi_cell(0, 8, str(ordenes['tipo']), border=1)
+
+        pdf.ln(10)
+
+        pdf.set_font('Times', '', 10)
+
+        pdf.cell(0, 0.0, '- end of report -', align='C')
+
+        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition': 'attachment;filename=reporte_ordenes.pdf'})
 
     except Exception as e:
         print("Error en la creacion del pdf",e)
