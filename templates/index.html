@@ -6,10 +6,17 @@
   
   <!-- Poner bonito -->
   {% for message in get_flashed_messages() %}
-  <div class="alert alert-success">
-    {{message}}
-  </div>
-  {% endfor %}
+    {% if 'Ha iniciado sesión con exito' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+    {% if 'Deberá iniciar sesión primero' in message %}
+        <div class="alert alert-danger">
+            {{message}}
+        </div>
+    {% endif %}    
+{% endfor %}
   <div>
     <h1>¡Bienvenido!</h1>
     <h3>En nuestra aplicación encontrarás la forma de realizar trading con distintas Cryptomonedas, además de esto se
@@ -19,16 +26,17 @@
   </div>
 
   <br>
-  <div class="container text-center">
+  <div class="container text-center" name="botones_index">
     <h6>Si ya tiene cuenta, puede iniciar sesión</h6>
-    <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark ">Iniciar Sesión</a>
+    <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark" >Iniciar Sesión</a>
     <br>
     <h6>Si no tienes cuenta, puede registrarse aquí</h6>
-    <a href="{{ url_for('registro') }}" class="btn btn-dark ">Registrarse</a>
+    <a href="{{ url_for('registro') }}" class="btn btn-dark" >Registrarse</a>
+    <h6>Si no tienes cuenta, puede registrarse aquí</h6>
+    <a href="{{ url_for('editar')}}" class="btn btn-dark" >Editar</a>
+
   </div>
+
 </body>
-
-
-
 
 {% endblock %}

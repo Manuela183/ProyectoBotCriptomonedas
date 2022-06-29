@@ -4,30 +4,34 @@
 
 <!-- Poner bonito -->
 {% for message in get_flashed_messages() %}
-    <div class="alert alert-success">
+    <div class="alert alert-danger">
         {{message}}
     </div>
 {% endfor %}
 <h1 class="h3 mb-3 fw-normal">Editar Usuario</h1>
-<form action="/editar_user/{{usuario.id}}" method="POST">
+<form action="{{ url_for('editar') }}" method="POST">
     <div class="container-lg">
         <div class="mb-3">
             <label for="nickname" class="form-label">Nickname</label>
-            <input type="text" name="nickname" class="form-control" id="nickname" value="{{usuario.Nickname}}" required>
+            <input type="text" name="nickname" class="form-control" id="nickname" value="{{usuario_edit[1]}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="api" class="form-label">Contraseña</label>
+            <input type="password" name="password1" class="form-control" id="password1" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*/-]).{8,}$" placeholder="Contraseña" required>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
-            <input type="email" name="email" class="form-control" id="email" value="{{usuario.email}}" aria-describedby="emailHelp" required>
+            <input type="email" name="email" class="form-control" id="email" value="{{usuario_edit[3]}}" aria-describedby="emailHelp" required>
         </div>
         <div class="mb-3">
             <label for="api" class="form-label">API - Binance</label>
-            <input type="text" name="api" class="form-control" id="api" value="{{usuario.api}}">
+            <input type="text" name="api" class="form-control" id="api" value="{{usuario_edit[5]}}">
         </div>
         <div class="mb-3">
             <label for="api_secret" class="form-label">Secret API - Binance</label>
-            <input type="text" name="api_secret" class="form-control" id="api_secret" value="{{usuario.api_secret}}">
+            <input type="text" name="api_secret" class="form-control" id="api_secret" value="{{usuario_edit[6]}}">
         </div>
-        <button type="submit" class="btn btn-primary" id="submit" disabled>Submit</button>
+        <button type="submit" class="btn btn-primary" id="submit" >Editar</button>
     </div>
 </form>
 
