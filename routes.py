@@ -402,3 +402,28 @@ def trade():
         return render_template('trade.html')
 
     return render_template('trade.html')
+
+@app.route('/cancelar_ordenes', methods=('GET', 'POST'))
+def cancelar_ordenes():
+
+    if request.method == 'POST':
+
+        if 'id' in session:
+            try:
+                conn = get_db_connection()
+                cur = conn.cursor()
+                cur.execute('''SELECT api, api_secret FROM usuario
+                            WHERE id=%s''', (session['id'],))
+
+                data = cur.fetchall()
+                api = (data[0][0], data[0][1])
+                client = bc.init_client(api[0], api[1])
+                open_orders = bc.get_open_orders(client)
+                print(open_orders)
+            except:
+                pass
+
+        
+
+    return render_template('trade.html')
+
