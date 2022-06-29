@@ -37,19 +37,35 @@
 
   <br>
 
-  <div class="text-center btn-group" name="botones_index" role="group">
-    <p>Si ya tiene cuenta, puede iniciar sesión</p>
-    <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark" >Iniciar Sesión</a>
-    <br>
-    <h6>Si no tienes cuenta, puede registrarse aquí</h6>
-    <a href="{{ url_for('registro') }}" class="btn btn-dark" >Registrarse</a>
-
-    <h6>Si desea editar su usuario</h6>
-    <a href="{{ url_for('editar')}}" class="btn btn-dark" >Editar</a>
-
-    <h6>Si quiere deshabilitar su cuenta</h6>
-    <a href="{{ url_for('deshabilitar_usuario')}}" class="btn btn-dark" >Deshabilitar</a>
+  <div class="row text-center">
+    <div class="col">
+      <p>Si ya tiene cuenta, puede iniciar sesión</p>
+    </div>
+    <div class="col">
+      <p>Si no tiene cuenta, puede registrarse aquí</p>
+    </div>
+    <div class="col">
+      <p>Si desea editar su usuario</p>
+    </div>
+    <div class="col">
+      <p>Si quiere deshabilitar su cuenta</p>
+    </div>
   </div>
+  <div class="row text-center">
+    <div class="col">
+      <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark" >Iniciar Sesión</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('registro') }}" class="btn btn-dark" >Registrarse</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('editar')}}" class="btn btn-dark" >Editar</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('deshabilitar_usuario')}}" class="btn btn-dark" >Deshabilitar</a>
+    </div>
+  </div>
+  
 
 </body>
 
