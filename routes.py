@@ -226,7 +226,7 @@ def deshabilitar_usuario():
                 conn.close()
         if bandera:
             flash('Se ha deshabilitado de forma exitosa')
-            return render_template('index.html')
+            return redirect(url_for('cerrar_sesion'))
         
     else:
         flash('Debe iniciar sesión para deshabilitarse')
