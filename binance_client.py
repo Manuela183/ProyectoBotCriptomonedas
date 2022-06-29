@@ -54,6 +54,9 @@ def make_trade(side, symbol, entry_price, tp, sl, client):
     else:
         return create_short(symbol, entry_price, tp, sl)
 
+def get_open_orders(client):
+    return client.get_open_orders(symbol='BNBBTC')
+
 # Long
 
 
