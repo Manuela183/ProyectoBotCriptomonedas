@@ -101,6 +101,12 @@
             <button type="submit" class="btn btn-primary">Enviar Orden</button>
         </div>
     </form>
+    <br>
+    <h2>Cancelar ordenes enviadas</h2>
+    <br>
+    <form action="{{ url_for('cancelar_ordenes') }}" method="post">
+        <button type="submit" class="btn btn-primary">Cancelar Ordenes</button>
+    </form>
 </div>
 
 
