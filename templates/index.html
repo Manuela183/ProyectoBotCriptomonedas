@@ -15,7 +15,17 @@
         <div class="alert alert-danger">
             {{message}}
         </div>
-    {% endif %}    
+    {% endif %}
+    {% if 'Se ha deshabilitado de forma exitosa' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+    {% if 'Se ha editado de forma exitosa' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
 {% endfor %}
   <div>
     <h1>¡Bienvenido!</h1>
@@ -26,15 +36,19 @@
   </div>
 
   <br>
-  <div class="container text-center" name="botones_index">
-    <h6>Si ya tiene cuenta, puede iniciar sesión</h6>
+
+  <div class="text-center btn-group" name="botones_index" role="group">
+    <p>Si ya tiene cuenta, puede iniciar sesión</p>
     <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark" >Iniciar Sesión</a>
     <br>
     <h6>Si no tienes cuenta, puede registrarse aquí</h6>
     <a href="{{ url_for('registro') }}" class="btn btn-dark" >Registrarse</a>
-    <h6>Si no tienes cuenta, puede registrarse aquí</h6>
+
+    <h6>Si desea editar su usuario</h6>
     <a href="{{ url_for('editar')}}" class="btn btn-dark" >Editar</a>
 
+    <h6>Si quiere deshabilitar su cuenta</h6>
+    <a href="{{ url_for('deshabilitar_usuario')}}" class="btn btn-dark" >Deshabilitar</a>
   </div>
 
 </body>

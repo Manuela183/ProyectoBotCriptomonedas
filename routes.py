@@ -57,6 +57,7 @@ def registro():
         api = str(request.form['api'])
         api_secret = str(request.form['api_secret'])
         role = "usuario"
+        estado = "enable"
 
         bandera = False
 
@@ -71,8 +72,8 @@ def registro():
             exists = cur.fetchall()
 
             if not exists:
-                cur.execute('INSERT INTO usuario (nickname, password1, email, role, api, api_secret)' 'VALUES (%s,%s,%s,%s,%s,%s)',
-                            (nickname, hash, email, role, api, api_secret))
+                cur.execute('INSERT INTO usuario (nickname, password1, email, role, api, api_secret, estado)' 'VALUES (%s,%s,%s,%s,%s,%s,%s)',
+                            (nickname, hash, email, role, api, api_secret,estado))
 
                 bandera = True
 
@@ -104,10 +105,11 @@ def iniciar_sesion():
         try:
             conn = get_db_connection()
             cur = conn.cursor()
-            cur.execute('''SELECT password1, id, role FROM usuario
+            cur.execute('''SELECT password1, id, role, estado FROM usuario
                         WHERE nickname=%s''', (nickname,))
 
             usuario = cur.fetchall()
+            print(usuario)
 
             if usuario:
                 hash = bcrypt.check_password_hash(usuario[0][0], password1)
@@ -123,7 +125,7 @@ def iniciar_sesion():
             cur.close()
             conn.close()
 
-        if 'id' in session:
+        if 'id' in session and usuario[0][3] == 'enable':
             flash("Ha iniciado sesión con exito")
             return redirect(url_for('index'))
         else:
@@ -179,7 +181,7 @@ def editar():
                 conn.close()
 
         if bandera:
-            flash('Se a editado de forma exitosa')
+            flash('Se ha editado de forma exitosa')
             return render_template('index.html')
 
         flash('Error en la toma de datos')
@@ -200,6 +202,38 @@ def editar():
             flash("Deberá iniciar sesión primero")
             return render_template('index.html')
 
+@app.route('/desable')
+def deshabilitar_usuario():
+
+    if 'id' in session:
+        id = session['id']
+        bandera = True
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+
+            cur.execute('''UPDATE usuario SET estado = 'disable' WHERE id = {}'''.format(id))
+
+            
+        except (Exception, psycopg2.Error) as error:
+                bandera = False
+                flash("Error al intentar editar")
+                print("Error al obtener datos de la base de datos", error)
+                return render_template('inicio_sesion.html')
+        finally:
+                conn.commit()
+                cur.close()
+                conn.close()
+        if bandera:
+            flash('Se ha deshabilitado de forma exitosa')
+            return render_template('index.html')
+        
+    else:
+        flash('Debe iniciar sesión para deshabilitarse')
+        
+        
+
+    return render_template('inicio_sesion.html')
 
 @app.route('/report/order/<symbol>')
 def report_order(symbol):
@@ -253,12 +287,15 @@ def download_users():
 
         pdf.cell(w= 50, h= 8, txt='Nombre', border=1, align='C', fill=0)
 
-        pdf.multi_cell(w= 0, h= 8, txt='Correo', border=1, align='C', fill=0)
+        pdf.cell(w= 85, h= 8, txt='Correo', border=1, align='C', fill=0)
+
+        pdf.multi_cell(w= 0, h= 8, txt='Estado', border=1, align='C', fill=0)
 
         for usuario in usuarios:
             pdf.cell(20, 8, str(usuario['id']), border=1)
             pdf.cell(50, 8, str(usuario['nickname']), border=1)
-            pdf.multi_cell(0, 8, str(usuario['email']), border=1)
+            pdf.cell(85, 8, str(usuario['email']), border=1)
+            pdf.multi_cell(0, 8, str(usuario['estado']), border=1)
 
         pdf.ln(10)
 

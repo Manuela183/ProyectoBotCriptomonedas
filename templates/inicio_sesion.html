@@ -12,7 +12,13 @@
         <div class="alert alert-danger">
             {{message}}
         </div>
-    {% endif %}    
+    {% endif %}
+    {% if 'Se ha registrado con exito' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+    
 {% endfor %}
 
 <h1 class="h3 mb-3 fw-normal">Inicio de Sesión</h1>
