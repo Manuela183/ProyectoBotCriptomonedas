@@ -54,8 +54,15 @@ def make_trade(side, symbol, entry_price, tp, sl, client):
     else:
         return create_short(symbol, entry_price, tp, sl)
 
+
 def get_open_orders(client):
-    return client.get_open_orders(symbol='BNBBTC')
+    return client.futures_get_open_orders(symbol='BTCUSDT')
+
+
+def cancel_orders(client, orderID):
+    client.futures_cancel_order(
+        symbol='BTCUSDT',
+        orderId=orderID)
 
 # Long
 
@@ -94,7 +101,8 @@ def create_long(symbol, entry_price, tp, sl, client):
 
     except:
         return False
-        
+
+
 def create_short(symbol, entry_price, tp, sl, client):
     try:
         client.futures_create_order(
