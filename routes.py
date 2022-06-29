@@ -456,11 +456,9 @@ def cancelar_ordenes():
                 api = (data[0][0], data[0][1])
                 client = bc.init_client(api[0], api[1])
                 open_orders = bc.get_open_orders(client)
-                print(len(open_orders))
                 
                 for order in open_orders:
-                    print(order['orderId'])
-                    print(bc.cancel_orders(client, order['orderId']))
+                    bc.cancel_orders(client, order['orderId'])
 
             except:
                 pass
