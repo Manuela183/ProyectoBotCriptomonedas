@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<body>
+  
+  <!-- Poner bonito -->
+  {% for message in get_flashed_messages() %}
+    {% if 'Ha iniciado sesión con exito' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+    {% if 'Deberá iniciar sesión primero' in message %}
+        <div class="alert alert-danger">
+            {{message}}
+        </div>
+    {% endif %}
+    {% if 'Se ha deshabilitado de forma exitosa' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+    {% if 'Se ha editado de forma exitosa' in message %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+{% endfor %}
+  <div>
+    <h1>¡Bienvenido!</h1>
+    <h3>En nuestra aplicación encontrarás la forma de realizar trading con distintas Cryptomonedas, además de esto se
+      podrá observar los diferentes movimientos en tiempo realizar
+      de estas Cryptos.
+    </h3>
+  </div>
+
+  <br>
+
+  <div class="row text-center">
+    <div class="col">
+      <p>Si ya tiene cuenta, puede iniciar sesión</p>
+    </div>
+    <div class="col">
+      <p>Si no tiene cuenta, puede registrarse aquí</p>
+    </div>
+    <div class="col">
+      <p>Si desea editar su usuario</p>
+    </div>
+    <div class="col">
+      <p>Si quiere deshabilitar su cuenta</p>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col">
+      <a href="{{ url_for('iniciar_sesion') }}" class="btn btn-dark" >Iniciar Sesión</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('registro') }}" class="btn btn-dark" >Registrarse</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('editar')}}" class="btn btn-dark" >Editar</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('deshabilitar_usuario')}}" class="btn btn-dark" >Deshabilitar</a>
+    </div>
+  </div>
+  
+
+</body>
+
+{% endblock %}

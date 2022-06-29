@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <h1>Usuario</h1>
+    {% for usuario in usuarios %}
+        <div class='usuario'>
+            <h3>#{{ usuario[0] }} ID {{ usuario[1] }} NICKNAME {{ usuario[2] }} PASSWORD</h3>
+            <i><p>({{ usuario[3] }} EMAIL)</p></i>
+        </div>
+    {% endfor %}
+{% endblock %}

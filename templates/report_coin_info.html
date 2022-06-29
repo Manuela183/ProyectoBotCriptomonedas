@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div>
+    <h2>Coin Info</h2>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Símbolo</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Base</th>
+                <th scope="col">Tipo de Ordenes</th>
+                <th scope="col">Cantidad mínima compra</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            <tr>
+                <!-- <th scope="row" -->
+                <td>{{coin_info['symbol']}}</td>
+                <td>{{coin_info['status']}}</td>
+                <td>{{coin_info['baseAsset']}}</td>
+                <td>{{coin_info['orderTypes']}}</td>
+                <td>{{coin_info['filters'][2]['minQty']}}</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

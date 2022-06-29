@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<table class="table">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Símbolo</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Compra/Venta</th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        {% for order in orders %}
+
+        <tr>
+            <!-- <th scope="row" -->
+            <td>{{order['time']}}</td>
+            <td>{{order['symbol']}}</td>
+            <td>{{order['price']}}</td>
+            <td>{{order['type']}}</td>
+            <td>{{order['side']}}</td>
+        </tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
